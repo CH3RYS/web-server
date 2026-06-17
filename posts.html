@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Городские прогулки — Публикации</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="posts.html">Публикации</a></li>
+      <li><a href="contact.html">Контакты</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <h1>Публикации</h1>
+    <p>Полные тексты заметок и фотоальбомы.</p>
+  </header>
+
+  <main>
+    <section id="postsContainer">
+      
+      <article id="post-1">
+        <h2>Утро в парке</h2>
+        <p>Длинный текст о прогулке у озера. Шаги, птицы и тихие скамейки.</p>
+        <figure>
+          <img src="https://via.placeholder.com/800x400?text=Park+Morning" alt="Утро в парке">
+          <figcaption>Ранняя роса на траве</figcaption>
+        </figure>
+      </article>
+
+      <article id="post-2">
+        <h2>Старинные улочки</h2>
+        <p>Истории домов и плитки, кафе за углом и узкие мостовые.</p>
+      </article>
+
+      <article id="post-3">
+        <h2>Набережная на закате</h2>
+        <p>Лучшие кадры и советы для фотографов-любителей.</p>
+        <table>
+          <thead>
+            <tr><th>Время</th><th>Место</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>19:30</td><td>Мост №1</td></tr>
+            <tr><td>20:00</td><td>Причал</td></tr>
+          </tbody>
+        </table>
+      </article>
+    </section>
+
+    <nav aria-label="Навигация по страницам">
+      <button id="prevPage" disabled>← Назад</button>
+      <button id="nextPage">Вперёд →</button>
+    </nav>
+  </main>
+
+  <aside>
+    <h3>Категории</h3>
+    <ul>
+      <li><a href="#park">Парки</a></li>
+      <li><a href="#streets">Улицы</a></li>
+      <li><a href="#photo">Фото</a></li>
+    </ul>
+  </aside>
+
+  <footer>
+    <p>Контент создан автором блога</p>
+  </footer>
+
+  <script>
+    
+    const allPosts = [
+      {id:1, title:'Утро в парке'},
+      {id:2, title:'Старинные улочки'},
+      {id:3, title:'Набережная на закате'},
+      {id:4, title:'Зимняя аллея'},
+      {id:5, title:'Цветущие дворы'}
+    ];
+    let page = 0;
+    const pageSize = 2;
+    const container = document.getElementById('postsContainer');
+
+    function renderPage(){
+      
+      const start = page * pageSize;
+      const slice = allPosts.slice(start, start + pageSize);
+      
+      container.innerHTML = '';
+      slice.forEach(p=>{
+        const art = document.createElement('article');
+        art.id = 'post-'+p.id;
+        art.innerHTML = '<h2>'+escapeHtml(p.title)+'</h2><p>Короткая заметка...</p><p><a href="#post-'+p.id+'">Читать</a></p>';
+        container.appendChild(art);
+      });
+      document.getElementById('prevPage').disabled = page === 0;
+      document.getElementById('nextPage').disabled = (start + pageSize) >= allPosts.length;
+    }
+
+    document.getElementById('prevPage').addEventListener('click', ()=>{
+      if(page>0){ page--; renderPage(); }
+    });
+    document.getElementById('nextPage').addEventListener('click', ()=>{
+      if((page+1)*pageSize < allPosts.length){ page++; renderPage(); }
+    });
+
+    function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+    renderPage();
+  </script>
+</body>
+</html>

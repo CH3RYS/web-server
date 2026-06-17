@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Городские прогулки — Контакты</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+  <nav>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="posts.html">Публикации</a></li>
+      <li><a href="contact.html">Контакты</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <h1>Контакты</h1>
+  </header>
+
+  <main>
+    <section>
+      <h2>Связаться</h2>
+      <form id="contactForm" action="#" method="post" novalidate>
+        <label for="name">Имя:</label>
+        <input id="name" name="name" type="text" required>
+
+        <label for="email">Email:</label>
+        <input id="email" name="email" type="email" required>
+
+        <label for="topic">Тема:</label>
+        <select id="topic" name="topic">
+          <option value="question">Вопрос</option>
+          <option value="photo">Отправить фото</option>
+          <option value="collab">Сотрудничество</option>
+        </select>
+
+        <label for="message">Сообщение:</label>
+        <textarea id="message" name="message" rows="6" required></textarea>
+
+        <fieldset>
+          <legend>Подписка</legend>
+          <label><input type="checkbox" name="subscribe" value="yes"> Я хочу получать заметки по почте</label>
+        </fieldset>
+
+        <button type="submit">Отправить</button>
+        <button type="reset">Очистить</button>
+      </form>
+
+      <section aria-live="polite" id="formResult" style="margin-top:1em;"></section>
+    </section>
+
+    <section>
+      <h2>Адрес</h2>
+      <address>
+        Улица Примерная, 10<br>
+        Город, Страна<br>
+        Email: <a href="mailto:hello@example.com">hello@example.com</a>
+      </address>
+    </section>
+  </main>
+
+  <footer>
+    <p>Спасибо за интерес к блогу.</p>
+  </footer>
+
+  <script>
+    document.getElementById('contactForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      //localStorage тут нужен наверное
+      const name = document.getElementById('name').value.trim();
+      const email = document.getElementById('email').value.trim();
+      const msg = document.getElementById('message').value.trim();
+      const result = document.getElementById('formResult');
+
+      if(!name || !email || !msg){
+        result.textContent = 'Пожалуйста, заполните все обязательные поля.';
+        return;
+      }
+      if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){
+        result.textContent = 'Неправильный формат email.';
+        return;
+      }
+
+      //здесь обычно отправка на сервер - в демо просто показываем сообщение.
+      result.innerHTML = '<strong>Спасибо, ' + escapeHtml(name) + '!</strong> Ваше сообщение принято.';
+      this.reset();
+
+      function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+    });
+  </script>
+</body>
+</html>

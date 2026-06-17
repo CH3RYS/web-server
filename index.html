@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <title>Городские прогулки — Главная</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+</head>
+<body>
+  <nav aria-label="Главная навигация">
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="posts.html">Публикации</a></li>
+      <li><a href="contact.html">Контакты</a></li>
+    </ul>
+  </nav>
+
+  <header>
+    <h1>Городские прогулки</h1>
+    <p>Заметки и фото с прогулок по городу и окрестностям.</p>
+  </header>
+
+  <main id="app">
+    <section id="featured">
+      <h2>Избранная прогулка</h2>
+      <article>
+        <figure>
+          <img src="https://via.placeholder.com/600x300?text=Парк" alt="Парк">
+          <figcaption>Весенний парк, апрель</figcaption>
+        </figure>
+        <h3 id="feat-title">Утро в парке</h3>
+        <p id="feat-excerpt">Короткая прогулка у озера — тишина и первые листики.</p>
+        <time datetime="2026-04-15">15 апреля 2026</time>
+        <p><a href="posts.html#post-1">Читать далее</a></p>
+      </article>
+    </section>
+
+    <section id="recent">
+      <h2>Последние записи</h2>
+      <ul id="post-list">
+        
+      </ul>
+
+      <form id="searchForm" aria-label="Поиск по записям">
+        <label for="q"><strong>Поиск:</strong></label>
+        <input type="search" id="q" name="q" placeholder="По заголовку или описанию">
+        <button type="submit">Найти</button>
+        <button type="button" id="clearSearch">Сброс</button>
+      </form>
+    </section>
+
+    <aside>
+      <h2>О блоге</h2>
+      <p>Короткие маршруты, фото и советы по интересным местам.</p>
+      <details>
+        <summary>Что здесь публикую</summary>
+        <ul>
+          <li>Маршруты</li>
+          <li>Фото</li>
+          <li>Местные кафе и лавочки</li>
+        </ul>
+      </details>
+    </aside>
+
+    <footer>
+      <p>© 2026 Городские прогулки</p>
+      <p><a href="contact.html">Написать автору</a></p>
+    </footer>
+  </main>
+
+  <script>
+    //Vine API
+    const vine = {
+      createApp(opts) { return { mount(selector) { opts.mounted && opts.mounted(); } }; }
+    };
+
+    vine.createApp({
+      data() {
+        return {
+          posts: [
+            {id:1, title:'Утро в парке', excerpt:'Короткая прогулка у озера.', date:'2026-04-15'},
+            {id:2, title:'Старинные улочки', excerpt:'Прогулка по историческому центру.', date:'2026-03-10'},
+            {id:3, title:'Набережная на закате', excerpt:'Лучшие места для фото.', date:'2026-05-02'}
+          ]
+        };
+      },
+      mounted() {
+        const rootList = document.getElementById('post-list');
+        const renderList = (items) => {
+          rootList.innerHTML = '';
+          items.forEach(p => {
+            const li = document.createElement('li');
+            li.innerHTML = '<article id="post-' + p.id + '"><h3>' + escapeHtml(p.title) + '</h3><p>' + escapeHtml(p.excerpt) + '</p><time datetime="'+p.date+'">'+p.date+'</time> <p><a href="posts.html#post-'+p.id+'">Открыть</a></p></article>';
+            rootList.appendChild(li);
+          });
+        };
+        const state = this.data();
+        renderList(state.posts);
+
+        document.getElementById('searchForm').addEventListener('submit', (e)=>{
+          e.preventDefault();
+          const q = document.getElementById('q').value.trim().toLowerCase();
+          if(!q){ renderList(state.posts); return; }
+          const filtered = state.posts.filter(p => p.title.toLowerCase().includes(q) || p.excerpt.toLowerCase().includes(q));
+          renderList(filtered);
+        });
+
+        document.getElementById('clearSearch').addEventListener('click', ()=>{
+          document.getElementById('q').value = '';
+          renderList(state.posts);
+        });
+
+        function escapeHtml(s){ return String(s).replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
+      }
+    }).mount('#app');
+  </script>
+</body>
+</html>
